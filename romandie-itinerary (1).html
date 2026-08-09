@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Neuchâtel &amp; Lausanne — 3 days</title>
+<meta name="theme-color" content="#E9ECE3">
+<style>
+:root{
+  --step: 20px;
+  --bg:#E9ECE3; --surface:#F6F8F1; --sunk:#DFE3D8;
+  --ink:#16211C; --soft:#4E5B54; --faint:#7A867F; --rule:#C8D0C2;
+  --d1:#1C6C8C; --d2:#0E7A5E; --d3:#9A6212;
+  --warn-bg:#F4EEDF; --warn-line:#B98A21;
+  --ecl:#D8430A; --ecl-bg:#FFE9DC; --ecl-ink:#5C1C05;
+  --font-display: Georgia, "Iowan Old Style", "Times New Roman", serif;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  --navh: 118px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#121714; --surface:#1B221E; --sunk:#0C100E;
+    --ink:#E7ECE4; --soft:#A3AEA6; --faint:#7B857E; --rule:#2F3932;
+    --d1:#63B4D2; --d2:#46C79C; --d3:#E0A84C;
+    --warn-bg:#241E12; --warn-line:#C79A38;
+    --ecl:#FF8A45; --ecl-bg:#2E1508; --ecl-ink:#FFD9C2;
+  }
+}
+html[data-theme="dark"]{
+  --bg:#121714; --surface:#1B221E; --sunk:#0C100E;
+  --ink:#E7ECE4; --soft:#A3AEA6; --faint:#7B857E; --rule:#2F3932;
+  --d1:#63B4D2; --d2:#46C79C; --d3:#E0A84C;
+  --warn-bg:#241E12; --warn-line:#C79A38;
+  --ecl:#FF8A45; --ecl-bg:#2E1508; --ecl-ink:#FFD9C2;
+}
+html[data-theme="light"]{
+  --bg:#E9ECE3; --surface:#F6F8F1; --sunk:#DFE3D8;
+  --ink:#16211C; --soft:#4E5B54; --faint:#7A867F; --rule:#C8D0C2;
+  --d1:#1C6C8C; --d2:#0E7A5E; --d3:#9A6212;
+  --warn-bg:#F4EEDF; --warn-line:#B98A21;
+  --ecl:#D8430A; --ecl-bg:#FFE9DC; --ecl-ink:#5C1C05;
+}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--font-body);font-size:var(--step);line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px;}
+
+/* ---------- sticky navigation ---------- */
+.nav{
+  position:sticky;top:0;z-index:50;background:var(--bg);
+  border-bottom:1px solid var(--rule);padding-top:env(safe-area-inset-top);
+}
+.nav-inner{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:10px 12px 10px 16px;}
+.pills{display:flex;gap:8px;overflow-x:auto;flex:1 1 auto;scrollbar-width:none;-ms-overflow-style:none;scroll-behavior:smooth;}
+.pills::-webkit-scrollbar{display:none;}
+.pill{
+  flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;
+  min-height:46px;padding:0 16px;border-radius:999px;border:1.5px solid var(--rule);
+  background:transparent;color:var(--soft);
+  font-family:var(--font-body);font-size:.8em;font-weight:600;letter-spacing:.02em;
+  text-decoration:none;white-space:nowrap;cursor:pointer;
+}
+.pill .dot{width:9px;height:9px;border-radius:50%;}
+.pill[data-day="1"] .dot{background:var(--d1);}
+.pill[data-day="2"] .dot{background:var(--d2);}
+.pill[data-day="3"] .dot{background:var(--d3);}
+.pill.on[data-day="1"]{background:var(--d1);border-color:var(--d1);color:#fff;}
+.pill.on[data-day="2"]{background:var(--d2);border-color:var(--d2);color:#fff;}
+.pill.on[data-day="3"]{background:var(--d3);border-color:var(--d3);color:#fff;}
+.pill.on .dot{background:currentColor;}
+html[data-theme="dark"] .pill.on{color:#0F1512;}
+@media (prefers-color-scheme: dark){ html:not([data-theme="light"]) .pill.on{color:#0F1512;} }
+
+.ctrls{display:flex;gap:8px;flex:0 0 auto;}
+.ctrl{
+  width:46px;height:46px;border-radius:12px;border:1.5px solid var(--rule);
+  background:transparent;color:var(--soft);font-family:var(--font-body);font-weight:700;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.78em;line-height:1;
+}
+.ctrl:active{background:var(--sunk);}
+.progress{height:3px;}
+.progress i{display:block;height:100%;width:0;background:var(--ink);transition:width .1s linear;}
+:focus-visible{outline:3px solid var(--d1);outline-offset:2px;border-radius:4px;}
+
+/* ---------- hero ---------- */
+.hero{padding:44px 0 30px;}
+.eyebrow{font-family:var(--font-mono);font-size:.66em;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin:0 0 18px;}
+.hero h1{font-family:var(--font-display);font-size:clamp(2.5rem,10.5vw,3.9rem);line-height:1.02;letter-spacing:-.02em;font-weight:400;margin:0 0 22px;}
+.hero h1 em{font-style:normal;color:var(--faint);}
+.lede{font-size:1.02em;color:var(--soft);margin:0 0 26px;max-width:34em;}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:14px;overflow:hidden;}
+.fact{background:var(--surface);padding:16px 18px;}
+.fact dt{font-family:var(--font-mono);font-size:.62em;letter-spacing:.13em;text-transform:uppercase;color:var(--faint);margin:0 0 6px;}
+.fact dd{margin:0;font-size:.92em;font-weight:600;}
+
+/* ---------- sections ---------- */
+section{scroll-margin-top:var(--navh);}
+.sec-head{padding:52px 0 22px;border-top:1px solid var(--rule);margin-top:44px;}
+.sec-head.first{border-top:none;margin-top:8px;padding-top:18px;}
+.daynum{font-family:var(--font-mono);font-size:.68em;letter-spacing:.16em;text-transform:uppercase;margin:0 0 12px;font-weight:700;}
+.sec-head h2{font-family:var(--font-display);font-weight:400;font-size:clamp(1.85rem,7vw,2.6rem);line-height:1.1;letter-spacing:-.015em;margin:0 0 14px;}
+.sec-sub{color:var(--soft);font-size:.95em;margin:0 0 20px;max-width:34em;}
+.tags{display:flex;flex-wrap:wrap;gap:8px;}
+.tag{font-family:var(--font-mono);font-size:.68em;letter-spacing:.06em;padding:7px 12px;border-radius:8px;background:var(--sunk);color:var(--soft);}
+#day1 .daynum{color:var(--d1);}
+#day2 .daynum{color:var(--d2);}
+#day3 .daynum{color:var(--d3);}
+
+/* ---------- route line ---------- */
+.route{list-style:none;margin:0;padding:0;}
+.stop{position:relative;display:grid;grid-template-columns:74px 1fr;gap:0 16px;padding:0 0 30px 0;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.stop::before{content:"";position:absolute;left:81px;top:16px;bottom:-6px;width:2px;background:var(--rule);}
+.stop:last-child::before{display:none;}
+.stop::after{content:"";position:absolute;left:75px;top:9px;width:14px;height:14px;border-radius:50%;background:var(--bg);border:2.5px solid var(--rule);transition:background .15s;}
+#day1 .stop::after{border-color:var(--d1);}
+#day2 .stop::after{border-color:var(--d2);}
+#day3 .stop::after{border-color:var(--d3);}
+#day1 .stop.done::after{background:var(--d1);}
+#day2 .stop.done::after{background:var(--d2);}
+#day3 .stop.done::after{background:var(--d3);}
+.time{grid-column:1;font-family:var(--font-mono);font-size:.76em;font-weight:600;color:var(--soft);padding-top:4px;text-align:right;font-variant-numeric:tabular-nums;}
+.body{grid-column:2;padding-left:14px;}
+.stop h3{font-family:var(--font-body);font-size:1.02em;font-weight:700;margin:0 0 6px;line-height:1.3;letter-spacing:-.005em;}
+.stop p{margin:0;color:var(--soft);font-size:.93em;}
+.stop p + p{margin-top:10px;}
+.stop.done h3{color:var(--faint);text-decoration:line-through;text-decoration-thickness:1.5px;}
+.stop.done p{opacity:.55;}
+.leg{display:inline-block;margin-top:9px;font-family:var(--font-mono);font-size:.72em;letter-spacing:.04em;color:var(--faint);}
+
+/* ---------- map links ---------- */
+.maps{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+.pin{
+  display:inline-flex;align-items:center;gap:7px;
+  min-height:40px;padding:0 13px 0 11px;border-radius:10px;
+  border:1.5px solid var(--rule);background:var(--surface);
+  font-family:var(--font-body);font-size:.74em;font-weight:600;letter-spacing:.01em;
+  text-decoration:none;color:var(--soft);white-space:nowrap;
+}
+.pin svg{width:15px;height:15px;flex:0 0 auto;}
+.pin:active{background:var(--sunk);}
+#day1 .pin{color:var(--d1);border-color:var(--d1);}
+#day2 .pin{color:var(--d2);border-color:var(--d2);}
+#day3 .pin{color:var(--d3);border-color:var(--d3);}
+.stop.done .maps{opacity:.5;}
+
+/* ---------- callouts ---------- */
+.note{border-radius:14px;padding:20px 22px;margin:8px 0 34px;background:var(--surface);border:1px solid var(--rule);}
+.note.warn{background:var(--warn-bg);border-color:var(--warn-line);}
+.note h4{font-family:var(--font-mono);font-size:.68em;letter-spacing:.14em;text-transform:uppercase;margin:0 0 10px;color:var(--soft);}
+.note.warn h4{color:var(--warn-line);}
+.note p{margin:0;font-size:.92em;color:var(--soft);}
+.note p + p{margin-top:12px;}
+.note .maps{margin-top:14px;}
+
+/* ---------- eclipse ---------- */
+.note.eclipse{background:var(--ecl-bg);border:2.5px solid var(--ecl);color:var(--ecl-ink);}
+.note.eclipse h4{color:var(--ecl);}
+.note.eclipse p{color:var(--ecl-ink);}
+.note.eclipse strong{color:var(--ecl);}
+.badge{
+  display:inline-block;background:var(--ecl);color:#fff;
+  font-family:var(--font-mono);font-size:.62em;font-weight:700;letter-spacing:.13em;
+  text-transform:uppercase;padding:6px 11px;border-radius:7px;margin-bottom:14px;
+}
+.flag{
+  display:inline-flex;align-items:center;gap:8px;margin-top:12px;
+  background:var(--ecl);color:#fff;border-radius:9px;padding:9px 13px;
+  font-family:var(--font-body);font-size:.75em;font-weight:700;
+  text-decoration:none;letter-spacing:.01em;
+}
+#eclipse .daynum{color:var(--ecl);}
+#eclipse .sec-head{border-top:2.5px solid var(--ecl);}
+.facts.ecl .fact dd{color:var(--ecl);font-size:1.05em;}
+.pill[data-day="e"] .dot{background:var(--ecl);}
+.pill.on[data-day="e"]{background:var(--ecl);border-color:var(--ecl);color:#fff;}
+.opt{border-left:4px solid var(--rule);padding-left:18px;margin:26px 0;}
+.opt.pick{border-left-color:var(--ecl);}
+.opt h5{font-family:var(--font-body);font-size:1em;font-weight:700;margin:0 0 8px;}
+.opt p{margin:0;color:var(--soft);font-size:.93em;}
+.opt p + p{margin-top:10px;}
+
+footer{border-top:1px solid var(--rule);margin-top:56px;padding:30px 0 calc(50px + env(safe-area-inset-bottom));color:var(--faint);font-size:.82em;}
+footer p{margin:0 0 12px;}
+
+@media (max-width:480px){
+  .stop{grid-template-columns:60px 1fr;}
+  .stop::before{left:67px;}
+  .stop::after{left:61px;}
+  .wrap{padding:0 16px;}
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation:none !important;transition:none !important;scroll-behavior:auto !important;}
+  .pills{scroll-behavior:auto;}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="ic-pin" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5.1 6.1 12.2 6.4 12.5a.8.8 0 0 0 1.2 0C12.9 21.2 19 14.1 19 9a7 7 0 0 0-7-7Zm0 9.6A2.6 2.6 0 1 1 14.6 9 2.6 2.6 0 0 1 12 11.6Z"/></symbol></svg>
+
+<nav class="nav" aria-label="Jump to a day">
+  <div class="nav-inner">
+    <div class="pills" id="pills">
+      <a class="pill" data-day="1" href="#day1"><span class="dot"></span>1 · Neuchâtel</a>
+      <a class="pill" data-day="2" href="#day2"><span class="dot"></span>2 · Areuse</a>
+      <a class="pill" data-day="3" href="#day3"><span class="dot"></span>3 · Lavaux</a>
+      <a class="pill" data-day="e" href="#eclipse"><span class="dot"></span>12 Aug · Eclipse</a>
+    </div>
+    <div class="ctrls">
+      <button class="ctrl" id="sizeBtn" aria-label="Change text size">A<span style="font-size:1.35em">A</span></button>
+      <button class="ctrl" id="themeBtn" aria-label="Switch between light and dark">◐</button>
+    </div>
+  </div>
+  <div class="progress"><i id="bar"></i></div>
+</nav>
+
+<div class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">Three days · Two bases · No car</p>
+    <h1>Neuchâtel<br><em>&amp;</em> Lausanne</h1>
+    <p class="lede">A gorge walk with turquoise water, the warmest lake in Switzerland, and the vineyard terraces above Lac Léman. Everything below runs on trains, buses and one tram. Tap any place name to open it in Maps.</p>
+    <dl class="facts">
+      <div class="fact"><dt>Night 1</dt><dd>Neuchâtel</dd></div>
+      <div class="fact"><dt>Night 2</dt><dd>Lausanne</dd></div>
+      <div class="fact"><dt>On foot</dt><dd>23 km over 2 days</dd></div>
+      <div class="fact"><dt>Swims</dt><dd>Three</dd></div>
+    </dl>
+  </header>
+
+  <!-- ===================== DAY 1 ===================== -->
+  <section id="day1">
+    <div class="sec-head first">
+      <p class="daynum">Day 1 · Neuchâtel</p>
+      <h2>A town carved out of butter</h2>
+      <p class="sec-sub">Dumas' line about the yellow limestone, and it holds up. An easy arrival day: one museum, one swim, no climbing.</p>
+      <div class="tags"><span class="tag">TRAVEL 1H30</span><span class="tag">FLAT</span><span class="tag">SWIM</span></div>
+    </div>
+
+    <ol class="route">
+      <li class="stop"><span class="time">09:40</span><div class="body">
+        <h3>Zürich HB → Neuchâtel</h3>
+        <p>Direct, no changes. Sit on the left after Bern for the lake.</p>
+        <span class="leg">1 H 30 · DIRECT</span>
+        <div class="maps">
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=47.3780356%2C8.5403767&amp;query_place_id=ChIJQW4OzAgKkEcRp1KMX7aYxvU"><svg><use href="#ic-pin"/></svg>Zürich HB</a>
+        </div>
+      </div></li>
+
+      <li class="stop"><span class="time">11:15</span><div class="body">
+        <h3>Arrive, drop bags at the hotel</h3>
+        <p>The station sits above the town; it's downhill to everything.</p>
+        <div class="maps">
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.9965966%2C6.93582&amp;query_place_id=ChIJP9B_ChkKjkcRK3kg0OPNGeU"><svg><use href="#ic-pin"/></svg>Neuchâtel station</a>
+        </div>
+      </div></li>
+
+      <li class="stop"><span class="time">11:45</span><div class="body">
+        <h3>Old town on foot</h3>
+        <p>The Collégiale and the castle on the ridge, then down through the arcaded streets to Place des Halles. Everything is the same golden limestone, quarried from the hillside behind. Ninety minutes of wandering, not a checklist.</p>
+        <div class="maps">
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.9919101%2C6.9260393&amp;query_place_id=ChIJ5X6vPA4KjkcR0aWUywN_qak"><svg><use href="#ic-pin"/></svg>Collégiale</a>
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.9920846%2C6.9270864&amp;query_place_id=ChIJFTykvxEKjkcR0-bTnqILf3Q"><svg><use href="#ic-pin"/></svg>Castle</a>
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.9902369%2C6.9283043&amp;query_place_id=ChIJ_6GoiREKjkcRvY_JZOo2cLw"><svg><use href="#ic-pin"/></svg>Place des Halles</a>
+        </div>
+      </div></li>
+
+      <li class="stop"><span class="time">13:15</span><div class="body">
+        <h3>Lunch</h3>
+        <p>Place des Halles or the streets running off it.</p>
+      </div></li>
+
+      <li class="stop"><span class="time">14:30</span><div class="body">
+        <h3>Laténium, Hauterive</h3>
+        <p>Ten minutes out along the shore. Switzerland's largest archaeology museum, and the lakeside site here gave its name to the entire European Iron Age — the La Tène period. Air-conditioned, which on a 31°C afternoon is not a minor point.</p>
+        <span class="leg">10 MIN BY BUS OR TRAIN · OPEN TO 17:00 · CLOSED MON</span>
+        <div class="maps">
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=47.0072545%2C6.9709894&amp;query_place_id=ChIJ-RKdrH4JjkcR_Dn0uWg_VQw"><svg><use href="#ic-pin"/></svg>Laténium</a>
+        </div>
+      </div></li>
+
+      <li class="stop"><span class="time">16:45</span><div class="body">
+        <h3>Swim at Jeunes-Rives</h3>
+        <p>Lac de Neuchâtel is the warmest of the large Swiss lakes — 23 to 25°C in August. A completely different proposition from the Verzasca. Plage de Monruz is the quieter alternative a little further east.</p>
+        <div class="maps">
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.9918212%2C6.940026&amp;query_place_id=ChIJ0WeXoT0KjkcRE4dwPG0Bxaw"><svg><use href="#ic-pin"/></svg>Jeunes-Rives</a>
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=47.0034246%2C6.9626538&amp;query_place_id=ChIJ37zRKaoJjkcR3ldimCw2BvI"><svg><use href="#ic-pin"/></svg>Plage de Monruz</a>
+        </div>
+      </div></li>
+
+      <li class="stop"><span class="time">19:30</span><div class="body">
+        <h3>Dinner in the old town</h3>
+        <p>Early night. Tomorrow starts properly.</p>
+      </div></li>
+    </ol>
+  </section>
+
+  <!-- ===================== DAY 2 ===================== -->
+  <section id="day2">
+    <div class="sec-head">
+      <p class="daynum">Day 2 · Gorges de l'Areuse → Lausanne</p>
+      <h2>The gorge, then move west</h2>
+      <p class="sec-sub">The day that echoes Verzasca: a river cut through rock, stone arch bridges, deep shade. Almost all of it descends.</p>
+      <div class="tags"><span class="tag">12 KM</span><span class="tag">3–3.5 H</span><span class="tag">MOSTLY DOWNHILL</span><span class="tag">SHADED</span></div>
+    </div>
+
+    <div class="note">
+      <h4>Bags</h4>
+      <p>Leave them at the hotel in Neuchâtel. You come back into town at the end of the walk to pick them up before the train to Lausanne.</p>
+    </div>
+
+    <ol class="route">
+      <li class="stop"><span class="time">09:00</span><div class="body">
+        <h3>Neuchâtel → Noiraigue</h3>
+        <p>Up the Val-de-Travers line to the head of the gorge.</p>
+        <span class="leg">20 MIN</span>
+        <div class="maps">
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.9548901%2C6.7217798&amp;query_place_id=ChIJ453TlOHnjUcRGk0xZWaIW-4"><svg><use href="#ic-pin"/></svg>Noiraigue station</a>
+        </div>
+      </div></li>
+
+      <li class="stop"><span class="time">09:30</span><div class="body">
+        <h3>Start walking — downstream</h3>
+        <p>The path is cut into the rock and crosses the water repeatedly on footbridges. Turquoise pools most of the way, and it stays in shade, which is exactly what you want in this heat.</p>
+        <div class="maps">
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.9505233%2C6.7470849&amp;query_place_id=ChIJq_QAJRTnjUcR6I5TjdfCmcI"><svg><use href="#ic-pin"/></svg>Gorges de l'Areuse</a>
+        </div>
+      </div></li>
+
+      <li class="stop"><span class="time">11:00</span><div class="body">
+        <h3>Saut de Brot</h3>
+        <p>A single high stone arch thrown across the ravine — the direct cousin of the Ponte dei Salti, and the photograph of the day.</p>
+        <div class="maps">
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.9498899%2C6.7491839&amp;query_place_id=ChIJtxeFjpXnjUcRzqrGM-mHQzA"><svg><use href="#ic-pin"/></svg>Saut de Brot</a>
+        </div>
+      </div></li>
+
+      <li class="stop"><span class="time">12:00</span><div class="body">
+        <h3>Champ-du-Moulin</h3>
+        <p>Roughly halfway. Lunch, or push on and eat at the lake.</p>
+        <div class="maps">
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.9604711%2C6.7843333"><svg><use href="#ic-pin"/></svg>Champ-du-Moulin</a>
+        </div>
+      </div></li>
+
+      <li class="stop"><span class="time">13:30</span><div class="body">
+        <h3>Boudry, and the river mouth</h3>
+        <p>The Areuse runs out into the lake here — a quiet pebble beach where the turquoise of the river meets the blue of the lake. Swim here rather than in the gorge itself: the water upstream is cold and much of it is protected. Bring something on your feet, the pebbles are sharp.</p>
+        <div class="maps">
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.945683%2C6.8707862&amp;query_place_id=ChIJi-a8cdXhjUcRiawdL8enakM"><svg><use href="#ic-pin"/></svg>Embouchure de l'Areuse</a>
+        </div>
+      </div></li>
+
+      <li class="stop"><span class="time">14:45</span><div class="body">
+        <h3>Littorail tram → Neuchâtel</h3>
+        <p>Board at Boudry, then collect your bags from the hotel.</p>
+        <span class="leg">25 MIN</span>
+        <div class="maps">
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.94961%2C6.839093&amp;query_place_id=ChIJR9Xc85TgjUcRShNE5z_JphE"><svg><use href="#ic-pin"/></svg>Boudry Littorail</a>
+        </div>
+      </div></li>
+
+      <li class="stop"><span class="time">15:50</span><div class="body">
+        <h3>Neuchâtel → Lausanne</h3>
+        <p>Along the lake the whole way.</p>
+        <span class="leg">40 MIN</span>
+        <div class="maps">
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.5170797%2C6.6291932&amp;query_place_id=ChIJEQLzX80vjEcRLgPvAOwnkkc"><svg><use href="#ic-pin"/></svg>Lausanne station</a>
+        </div>
+      </div></li>
+
+      <li class="stop"><span class="time">16:40</span><div class="body">
+        <h3>Check in</h3>
+      </div></li>
+
+      <li class="stop"><span class="time">18:00</span><div class="body">
+        <h3>Down to Ouchy on the m2</h3>
+        <p>The steepest metro line in the world drops you at the waterfront. Walk the quai as the light goes off the Savoy Alps opposite.</p>
+        <div class="maps">
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.505662%2C6.626861&amp;query_place_id=ChIJZR8GLMUvjEcRrPu8xY4bAS8"><svg><use href="#ic-pin"/></svg>Ouchy</a>
+        </div>
+      </div></li>
+
+      <li class="stop"><span class="time">20:00</span><div class="body">
+        <h3>Dinner</h3>
+        <p>The old town above the cathedral, or Le Flon if you want it louder.</p>
+        <div class="maps">
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.5227113%2C6.6348879&amp;query_place_id=ChIJFQ36WTEujEcR-v_-_IG7-CQ"><svg><use href="#ic-pin"/></svg>Cathedral</a>
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.520487%2C6.6300153&amp;query_place_id=ChIJX6HE7C0ujEcRTxxTVpWoh1c"><svg><use href="#ic-pin"/></svg>Le Flon</a>
+        </div>
+      </div></li>
+    </ol>
+
+    <div class="note">
+      <h4>If you want the harder version</h4>
+      <p>Swap the gorge for the <strong>Creux du Van</strong> from the same station at Noiraigue. The Sentier des 14 Contours climbs about 550 m to the rim of a 160 m natural rock amphitheatre — roughly three hours up. Spectacular, but fully exposed, so you'd need to be walking by 08:00 in this heat. Do a short stretch of the gorge afterwards rather than the full 12 km.</p>
+      <div class="maps">
+        <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.9309929%2C6.7234511&amp;query_place_id=ChIJI8sLJPjnjUcRqNRK_XyZTcA"><svg><use href="#ic-pin"/></svg>Creux du Van</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== DAY 3 ===================== -->
+  <section id="day3">
+    <div class="sec-head">
+      <p class="daynum">Day 3 · Lavaux → home</p>
+      <h2>Terraces, then a museum by the platform</h2>
+      <p class="sec-sub">Walk east through the vineyards in the cool of the morning, swim, then finish the trip in an air-conditioned gallery that happens to be attached to the station.</p>
+      <div class="tags"><span class="tag">11 KM</span><span class="tag">3 H</span><span class="tag">UNDULATING</span><span class="tag">NO SHADE</span></div>
+    </div>
+
+    <div class="note warn">
+      <h4>Start early — this one is serious about sun</h4>
+      <p>Lavaux is famous for its three suns: the sky, the reflection off the lake, and the heat radiating back out of the stone walls. It is genuinely punishing after 11:00. Be walking by 08:30 and carry more water than feels necessary.</p>
+    </div>
+
+    <ol class="route">
+      <li class="stop"><span class="time">07:45</span><div class="body">
+        <h3>Check out, leave bags with the hotel</h3>
+        <p>Pick them up on the way to the station this evening — nothing needs carrying over the terraces.</p>
+      </div></li>
+
+      <li class="stop"><span class="time">08:15</span><div class="body">
+        <h3>Lausanne → Lutry</h3>
+        <span class="leg">10 MIN</span>
+        <div class="maps">
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.5038829%2C6.6902738&amp;query_place_id=ChIJu7AaNDsvjEcRl5svGw83zQA"><svg><use href="#ic-pin"/></svg>Lutry station</a>
+        </div>
+      </div></li>
+
+      <li class="stop"><span class="time">08:30</span><div class="body">
+        <h3>Walk east through the terraces</h3>
+        <p>Lutry → Grandvaux → Épesses → Rivaz → St-Saphorin. UNESCO-listed, worked since the twelfth century, with the lake and the Savoy Alps in front of you almost the whole way.</p>
+        <span class="leg">11 KM · ~3 H</span>
+        <div class="maps">
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.5030476%2C6.7215736&amp;query_place_id=ChIJQVEV5rwojEcRlY4mmlleItU"><svg><use href="#ic-pin"/></svg>Grandvaux</a>
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.4913114%2C6.7479262&amp;query_place_id=ChIJW7Jb7XsojEcRGjo1hZg9Gjo"><svg><use href="#ic-pin"/></svg>Épesses</a>
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.4764133%2C6.7786131&amp;query_place_id=ChIJ7-W4vw8ojEcRg65R-mH69hc"><svg><use href="#ic-pin"/></svg>Rivaz</a>
+        </div>
+      </div></li>
+
+      <li class="stop"><span class="time">11:30</span><div class="body">
+        <h3>St-Saphorin</h3>
+        <p>The prettiest village in Lavaux, and small enough that ten minutes covers it.</p>
+        <div class="maps">
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.4732766%2C6.7961822&amp;query_place_id=ChIJwUXiCaaCjkcRZoWMd6goOec"><svg><use href="#ic-pin"/></svg>St-Saphorin</a>
+        </div>
+      </div></li>
+
+      <li class="stop"><span class="time">12:00</span><div class="body">
+        <h3>Swim and long lunch</h3>
+        <p>Drop down to the water at Rivaz, or take the train two stops to Cully or Vevey for more choice.</p>
+        <div class="maps">
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.4895985%2C6.7290888&amp;query_place_id=ChIJxwJUL4QojEcRKgsb-2yr_zA"><svg><use href="#ic-pin"/></svg>Cully</a>
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.4630583%2C6.8432523&amp;query_place_id=ChIJhWtSXdKcjkcRgjTsBUf5Bv8"><svg><use href="#ic-pin"/></svg>Vevey</a>
+        </div>
+      </div></li>
+
+      <li class="stop"><span class="time">14:30</span><div class="body">
+        <h3>Back to Lausanne</h3>
+        <span class="leg">20–30 MIN</span>
+      </div></li>
+
+      <li class="stop"><span class="time">15:00</span><div class="body">
+        <h3>Plateforme 10</h3>
+        <p>Three museums in one complex built directly against the station: MCBA for fine art, Photo Elysée for photography, mudac for design. You walk from the last room to your platform. If you'd rather one strong thing than three, the Collection de l'Art Brut across town is the more singular experience — outsider art, unlike any other museum in Europe.</p>
+        <span class="leg">BOTH OPEN TO 18:00 · ART BRUT CLOSED MON</span>
+        <div class="maps">
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.5184206%2C6.624534&amp;query_place_id=ChIJT8HPv98vjEcRBsvt-SA6kSo"><svg><use href="#ic-pin"/></svg>Plateforme 10</a>
+          <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.527318%2C6.62466&amp;query_place_id=ChIJ8YO5HiYujEcRg4pb6XR5bo0"><svg><use href="#ic-pin"/></svg>Art Brut</a>
+        </div>
+      </div></li>
+
+      <li class="stop"><span class="time">17:00</span><div class="body">
+        <h3>Lausanne → Zürich</h3>
+        <span class="leg">2 H 10 · DIRECT · ARRIVES 19:15</span>
+        <a class="flag" href="#eclipse">Not on 12 August — read this first</a>
+      </div></li>
+
+      <li class="stop"><span class="time">19:15</span><div class="body">
+        <h3>Home</h3>
+      </div></li>
+    </ol>
+  </section>
+
+
+  <!-- ===================== ECLIPSE ===================== -->
+  <section id="eclipse">
+    <div class="sec-head">
+      <p class="daynum">Wednesday 12 August · Evening</p>
+      <h2>Do not be on a train at 20:18</h2>
+      <p class="sec-sub">A partial solar eclipse, not a solstice — and a deep one. The Moon covers 91–93% of the Sun over Switzerland, the greatest partial eclipse here since August 1999, with nothing comparable again in our lifetimes.</p>
+    </div>
+
+    <dl class="facts ecl">
+      <div class="fact"><dt>First contact</dt><dd>19:24</dd></div>
+      <div class="fact"><dt>Maximum</dt><dd>20:18</dd></div>
+      <div class="fact"><dt>Coverage</dt><dd>91–93%</dd></div>
+      <div class="fact"><dt>Sun height</dt><dd>3° · a thumb</dd></div>
+    </dl>
+
+    <div class="note eclipse" style="margin-top:28px">
+      <span class="badge">Eyes — no exceptions</span>
+      <p>You need <strong>certified eclipse glasses (ISO 12312-2)</strong>, and you need to buy them now, because they sell out in the final week. Ordinary sunglasses are <strong>not</strong> sufficient — they pass far too much light. Never look through binoculars, a telescope or a camera without a proper solar filter fitted in front of the lens; the optics concentrate the light and the damage is instant.</p>
+      <p>Even at 93% covered, the remaining sliver of Sun is roughly <strong>10,000 times brighter than a full Moon</strong>. A brief unprotected glance can permanently burn the retina, and there are no pain receptors there to warn you.</p>
+    </div>
+
+    <div class="note">
+      <h4>Why the 17:00 train doesn't work</h4>
+      <p>It reaches Zürich at 19:15 — nine minutes before first contact, assuming everything runs to the second. Any delay leaves you moving, or underground at Zürich HB, through the start of the event. Take one of the two options below instead.</p>
+    </div>
+
+    <div class="opt pick">
+      <h5>Option A — stay in Lausanne, travel after 21:00</h5>
+      <p>The better option, and it's a matter of geometry. At maximum the Sun sits about three degrees above the horizon — a bit more than a thumb's width at arm's length — in the <strong>west-northwest</strong>. What matters is not altitude but an unobstructed low horizon in that direction, and Lausanne's lakefront gives you exactly that: open water down the lake toward Geneva, with only the distant Jura beyond it.</p>
+      <p>Stand on the <strong>Ouchy quai</strong>, or go up into Lavaux — Chexbres or the Mont-Pèlerin funicular — for height over the vines with the same open western view. Then take a late direct train home; the last departures run well past 21:00, but check the exact one before you commit.</p>
+      <div class="maps">
+        <a class="pin" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=46.505662%2C6.626861&amp;query_place_id=ChIJZR8GLMUvjEcRrPu8xY4bAS8"><svg><use href="#ic-pin"/></svg>Ouchy quai</a>
+      </div>
+    </div>
+
+    <div class="opt">
+      <h5>Option B — be home early, then go up the Uetliberg</h5>
+      <p>Swap the 17:00 for a departure around 15:20 and you're back by roughly 17:30 with time to spare. Then take the S10 up the <strong>Uetliberg</strong> — because from Zürich the eclipse ends at 20:42 when the Sun drops behind the Albis ridge, and the Uetliberg <em>is</em> that ridge. Standing on top of it is the difference between watching to the end and losing the Sun early.</p>
+      <p>The Urania observatory in the city centre also opens for events like this, but it will be extremely busy.</p>
+    </div>
+
+    <div class="note warn">
+      <h4>The one thing that can ruin it</h4>
+      <p>At three degrees of elevation, a single band of low cloud in the west blocks everything, even under an otherwise perfectly clear sky. Check the western horizon forecast specifically, not the general one — and note that thin cloud or haze is <strong>not</strong> a safe filter. Glasses on regardless.</p>
+      <p>One consolation if it clouds over: the Perseids peak the same night, so stay out and look up anyway.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>Times are planning estimates, not a timetable — check the real connection in the SBB app the evening before, and screenshot Day 2, because reception in the gorge is patchy.</p>
+    <p>The page itself works offline: no fonts, images or scripts load from the internet. Map links need a signal.</p>
+    <p>Tap a stop to mark it done. Use <strong>Aa</strong> for larger text and <strong>◐</strong> to switch between light and dark.</p>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var mem = {};
+  function save(k,v){
+    mem[k]=v;
+    try{ if(window.storage && window.storage.set){ window.storage.set(k, String(v)); } }catch(e){}
+  }
+  function load(k){
+    return new Promise(function(res){
+      if(k in mem) return res(mem[k]);
+      try{
+        if(window.storage && window.storage.get){
+          window.storage.get(k).then(function(r){ res(r ? r.value : null); }).catch(function(){ res(null); });
+          return;
+        }
+      }catch(e){}
+      res(null);
+    });
+  }
+
+  var sizes = ["20px","22.5px","25px"], si = 0;
+  var sizeBtn = document.getElementById("sizeBtn");
+  function applySize(){
+    document.documentElement.style.setProperty("--step", sizes[si]);
+    sizeBtn.setAttribute("aria-label","Text size " + (si+1) + " of " + sizes.length);
+  }
+  sizeBtn.addEventListener("click", function(){
+    si = (si + 1) % sizes.length; applySize(); save("textsize", si);
+  });
+  load("textsize").then(function(v){ if(v!==null){ si = Number(v)||0; applySize(); } });
+
+  var themeBtn = document.getElementById("themeBtn");
+  function applyTheme(t){
+    if(t){ document.documentElement.setAttribute("data-theme", t); }
+    else { document.documentElement.removeAttribute("data-theme"); }
+  }
+  themeBtn.addEventListener("click", function(){
+    var cur = document.documentElement.getAttribute("data-theme");
+    var sysDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    var next = cur ? (cur === "dark" ? "light" : "dark") : (sysDark ? "light" : "dark");
+    applyTheme(next); save("theme", next);
+  });
+  load("theme").then(function(v){ if(v){ applyTheme(v); } });
+
+  document.querySelectorAll(".stop").forEach(function(el,i){
+    var key = "stop" + i;
+    el.setAttribute("role","button");
+    el.setAttribute("tabindex","0");
+    function flip(e){
+      if(e && e.target && e.target.closest && e.target.closest("a")) return;
+      var on = el.classList.toggle("done");
+      el.setAttribute("aria-pressed", on ? "true" : "false");
+      save(key, on ? "1" : "0");
+    }
+    el.addEventListener("click", flip);
+    el.addEventListener("keydown", function(e){
+      if(e.target !== el) return;
+      if(e.key === "Enter" || e.key === " "){ e.preventDefault(); flip(null); }
+    });
+    load(key).then(function(v){
+      if(v === "1"){ el.classList.add("done"); el.setAttribute("aria-pressed","true"); }
+      else { el.setAttribute("aria-pressed","false"); }
+    });
+  });
+
+  var nav = document.querySelector(".nav");
+  var bar = document.getElementById("bar");
+  var pills = Array.prototype.slice.call(document.querySelectorAll(".pill"));
+  var pillbox = document.getElementById("pills");
+  var sections = pills.map(function(p){ return document.querySelector(p.getAttribute("href")); });
+
+  function measure(){
+    document.documentElement.style.setProperty("--navh", (nav.offsetHeight + 14) + "px");
+  }
+  var ticking = false;
+  function update(){
+    ticking = false;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(100, (window.scrollY / h) * 100) : 0) + "%";
+    var line = window.scrollY + nav.offsetHeight + 40, active = 0;
+    sections.forEach(function(s,i){ if(s && s.offsetTop <= line){ active = i; } });
+    pills.forEach(function(p,i){
+      var on = i === active;
+      p.classList.toggle("on", on);
+      if(on){ p.setAttribute("aria-current","true"); } else { p.removeAttribute("aria-current"); }
+    });
+    var cur = pills[active];
+    if(cur){
+      var left = cur.offsetLeft - 16;
+      if(Math.abs(pillbox.scrollLeft - left) > 24){ pillbox.scrollLeft = left; }
+    }
+  }
+  function onScroll(){ if(!ticking){ ticking = true; window.requestAnimationFrame(update); } }
+  window.addEventListener("scroll", onScroll, {passive:true});
+  window.addEventListener("resize", function(){ measure(); update(); });
+  measure(); update();
+})();
+</script>
+</body>
+</html>
