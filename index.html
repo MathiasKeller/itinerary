@@ -130,6 +130,37 @@ section{scroll-margin-top:var(--navh);}
 .stop p + p{margin-top:10px;}
 .stop.done h3{color:var(--faint);text-decoration:line-through;text-decoration-thickness:1.5px;}
 .stop.done p{opacity:.55;}
+/* ---------- activity marks ---------- */
+.time{display:flex;flex-direction:column;align-items:flex-end;gap:9px;}
+.act{
+  width:34px;height:34px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;flex:0 0 auto;
+}
+.act svg{width:19px;height:19px;}
+.act.swim{background:#D5E9F4;color:#12688F;}
+.act.hike{background:#DBEDD8;color:#356E28;}
+.act.sight{background:#F7DFD6;color:#A54325;}
+.act.museum{background:#E4DCF3;color:#5F4193;}
+.act.transit{background:var(--sunk);color:var(--faint);}
+html[data-theme="dark"] .act.swim{background:#0F2E3C;color:#68C1E4;}
+html[data-theme="dark"] .act.hike{background:#152F19;color:#82CD6E;}
+html[data-theme="dark"] .act.sight{background:#391B11;color:#E68C67;}
+html[data-theme="dark"] .act.museum{background:#241B3B;color:#B79DEA;}
+@media (prefers-color-scheme: dark){
+  html:not([data-theme="light"]) .act.swim{background:#0F2E3C;color:#68C1E4;}
+  html:not([data-theme="light"]) .act.hike{background:#152F19;color:#82CD6E;}
+  html:not([data-theme="light"]) .act.sight{background:#391B11;color:#E68C67;}
+  html:not([data-theme="light"]) .act.museum{background:#241B3B;color:#B79DEA;}
+}
+.stop.done .act{opacity:.4;}
+.key{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px;}
+.key span{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--font-mono);font-size:.62em;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--faint);
+}
+.key .act{width:28px;height:28px;border-radius:8px;}
+.key .act svg{width:16px;height:16px;}
 .leg{display:inline-block;margin-top:9px;font-family:var(--font-mono);font-size:.72em;letter-spacing:.04em;color:var(--faint);}
 
 /* ---------- map links ---------- */
@@ -201,7 +232,31 @@ footer p{margin:0 0 12px;}
 </head>
 <body>
 
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="ic-pin" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5.1 6.1 12.2 6.4 12.5a.8.8 0 0 0 1.2 0C12.9 21.2 19 14.1 19 9a7 7 0 0 0-7-7Zm0 9.6A2.6 2.6 0 1 1 14.6 9 2.6 2.6 0 0 1 12 11.6Z"/></symbol></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="ic-swim" viewBox="0 0 24 24">
+  <circle cx="9" cy="5.6" r="2.4" fill="currentColor"/>
+  <path d="M3.4 12.6 8 9.6a2.6 2.6 0 0 1 2.8.06L14 11.9l3.4-2.7" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M2 18.1q1.6-2.1 3.2 0t3.2 0 3.2 0 3.2 0 3.2 0" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+</symbol>
+<symbol id="ic-hike" viewBox="0 0 24 24">
+  <circle cx="10.2" cy="4" r="2.2" fill="currentColor"/>
+  <path d="M19 3.2v17.6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+  <path d="M10.4 7.6 8 12.4l3 1.9-.4 6.4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M8 12.4 5.2 17.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M11 8.4 15 10.3l3.9-1.5" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+</symbol>
+<symbol id="ic-cathedral" viewBox="0 0 24 24">
+  <path fill="currentColor" fill-rule="evenodd" d="M12 .8 15.7 6.8V21H8.3V6.8ZM4.6 5.6 7.3 9.4V21H1.9V9.4ZM19.4 5.6 22.1 9.4V21h-5.4V9.4ZM10 21v-6.3a2 2 0 0 1 4 0V21Z"/>
+</symbol>
+<symbol id="ic-temple" viewBox="0 0 24 24">
+  <path fill="currentColor" d="M12 1.8 22.6 7.9H1.4Z"/>
+  <path fill="currentColor" d="M2.2 9.2h19.6v2.1H2.2Z"/>
+  <path fill="currentColor" d="M4.2 12.6h2.5v6.2H4.2ZM10.75 12.6h2.5v6.2h-2.5ZM17.3 12.6h2.5v6.2h-2.5Z"/>
+  <path fill="currentColor" d="M1.6 20.1h20.8v2.1H1.6Z"/>
+</symbol>
+<symbol id="ic-train" viewBox="0 0 24 24">
+  <path fill="currentColor" fill-rule="evenodd" d="M12 1.6c-4.3 0-7 .9-7 4.2v8.4a3.6 3.6 0 0 0 3.6 3.6l-2 3h2.5l1.4-2.1h3l1.4 2.1h2.5l-2-3A3.6 3.6 0 0 0 19 14.2V5.8c0-3.3-2.7-4.2-7-4.2Zm-4.4 5.3h8.8v3.7H7.6Zm1.3 8.1a1.6 1.6 0 1 1 0-3.2 1.6 1.6 0 0 1 0 3.2Zm6.2 0a1.6 1.6 0 1 1 0-3.2 1.6 1.6 0 0 1 0 3.2Z"/>
+</symbol>
+<symbol id="ic-pin" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5.1 6.1 12.2 6.4 12.5a.8.8 0 0 0 1.2 0C12.9 21.2 19 14.1 19 9a7 7 0 0 0-7-7Zm0 9.6A2.6 2.6 0 1 1 14.6 9 2.6 2.6 0 0 1 12 11.6Z"/></symbol></svg>
 
 <nav class="nav" aria-label="Jump to a day">
   <div class="nav-inner">
@@ -231,6 +286,13 @@ footer p{margin:0 0 12px;}
       <div class="fact"><dt>On foot</dt><dd>23 km over 2 days</dd></div>
       <div class="fact"><dt>Swims</dt><dd>Three</dd></div>
     </dl>
+    <div class="key">
+      <span><i class="act hike"><svg><use href="#ic-hike"/></svg></i>Hike</span>
+      <span><i class="act swim"><svg><use href="#ic-swim"/></svg></i>Swim</span>
+      <span><i class="act sight"><svg><use href="#ic-cathedral"/></svg></i>Town</span>
+      <span><i class="act museum"><svg><use href="#ic-temple"/></svg></i>Museum</span>
+      <span><i class="act transit"><svg><use href="#ic-train"/></svg></i>Travel</span>
+    </div>
   </header>
 
   <!-- ===================== DAY 1 ===================== -->
@@ -243,7 +305,7 @@ footer p{margin:0 0 12px;}
     </div>
 
     <ol class="route">
-      <li class="stop"><span class="time">09:40</span><div class="body">
+      <li class="stop"><span class="time">09:40<i class="act transit"><svg><use href="#ic-train"/></svg></i></span><div class="body">
         <h3>Zürich HB → Neuchâtel</h3>
         <p>Direct, no changes. Sit on the left after Bern for the lake.</p>
         <span class="leg">1 H 30 · DIRECT</span>
@@ -261,7 +323,7 @@ footer p{margin:0 0 12px;}
         </div>
       </div></li>
 
-      <li class="stop"><span class="time">11:45</span><div class="body">
+      <li class="stop"><span class="time">11:45<i class="act sight"><svg><use href="#ic-cathedral"/></svg></i></span><div class="body">
         <h3>Old town on foot</h3>
         <p>The Collégiale and the castle on the ridge, then down through the arcaded streets to Place des Halles. Everything is the same golden limestone, quarried from the hillside behind. Ninety minutes of wandering, not a checklist.</p>
         <div class="maps">
@@ -276,7 +338,7 @@ footer p{margin:0 0 12px;}
         <p>Place des Halles or the streets running off it.</p>
       </div></li>
 
-      <li class="stop"><span class="time">14:30</span><div class="body">
+      <li class="stop"><span class="time">14:30<i class="act museum"><svg><use href="#ic-temple"/></svg></i></span><div class="body">
         <h3>Laténium, Hauterive</h3>
         <p>Ten minutes out along the shore. Switzerland's largest archaeology museum, and the lakeside site here gave its name to the entire European Iron Age — the La Tène period. Air-conditioned, which on a 31°C afternoon is not a minor point.</p>
         <span class="leg">10 MIN BY BUS OR TRAIN · OPEN TO 17:00 · CLOSED MON</span>
@@ -285,7 +347,7 @@ footer p{margin:0 0 12px;}
         </div>
       </div></li>
 
-      <li class="stop"><span class="time">16:45</span><div class="body">
+      <li class="stop"><span class="time">16:45<i class="act swim"><svg><use href="#ic-swim"/></svg></i></span><div class="body">
         <h3>Swim at Jeunes-Rives</h3>
         <p>Lac de Neuchâtel is the warmest of the large Swiss lakes — 23 to 25°C in August. A completely different proposition from the Verzasca. Plage de Monruz is the quieter alternative a little further east.</p>
         <div class="maps">
@@ -316,7 +378,7 @@ footer p{margin:0 0 12px;}
     </div>
 
     <ol class="route">
-      <li class="stop"><span class="time">09:00</span><div class="body">
+      <li class="stop"><span class="time">09:00<i class="act transit"><svg><use href="#ic-train"/></svg></i></span><div class="body">
         <h3>Neuchâtel → Noiraigue</h3>
         <p>Up the Val-de-Travers line to the head of the gorge.</p>
         <span class="leg">20 MIN</span>
@@ -325,7 +387,7 @@ footer p{margin:0 0 12px;}
         </div>
       </div></li>
 
-      <li class="stop"><span class="time">09:30</span><div class="body">
+      <li class="stop"><span class="time">09:30<i class="act hike"><svg><use href="#ic-hike"/></svg></i></span><div class="body">
         <h3>Start walking — downstream</h3>
         <p>The path is cut into the rock and crosses the water repeatedly on footbridges. Turquoise pools most of the way, and it stays in shade, which is exactly what you want in this heat.</p>
         <div class="maps">
@@ -333,7 +395,7 @@ footer p{margin:0 0 12px;}
         </div>
       </div></li>
 
-      <li class="stop"><span class="time">11:00</span><div class="body">
+      <li class="stop"><span class="time">11:00<i class="act hike"><svg><use href="#ic-hike"/></svg></i></span><div class="body">
         <h3>Saut de Brot</h3>
         <p>A single high stone arch thrown across the ravine — the direct cousin of the Ponte dei Salti, and the photograph of the day.</p>
         <div class="maps">
@@ -349,7 +411,7 @@ footer p{margin:0 0 12px;}
         </div>
       </div></li>
 
-      <li class="stop"><span class="time">13:30</span><div class="body">
+      <li class="stop"><span class="time">13:30<i class="act swim"><svg><use href="#ic-swim"/></svg></i></span><div class="body">
         <h3>Boudry, and the river mouth</h3>
         <p>The Areuse runs out into the lake here — a quiet pebble beach where the turquoise of the river meets the blue of the lake. Swim here rather than in the gorge itself: the water upstream is cold and much of it is protected. Bring something on your feet, the pebbles are sharp.</p>
         <div class="maps">
@@ -357,7 +419,7 @@ footer p{margin:0 0 12px;}
         </div>
       </div></li>
 
-      <li class="stop"><span class="time">14:45</span><div class="body">
+      <li class="stop"><span class="time">14:45<i class="act transit"><svg><use href="#ic-train"/></svg></i></span><div class="body">
         <h3>Littorail tram → Neuchâtel</h3>
         <p>Board at Boudry, then collect your bags from the hotel.</p>
         <span class="leg">25 MIN</span>
@@ -366,7 +428,7 @@ footer p{margin:0 0 12px;}
         </div>
       </div></li>
 
-      <li class="stop"><span class="time">15:50</span><div class="body">
+      <li class="stop"><span class="time">15:50<i class="act transit"><svg><use href="#ic-train"/></svg></i></span><div class="body">
         <h3>Neuchâtel → Lausanne</h3>
         <p>Along the lake the whole way.</p>
         <span class="leg">40 MIN</span>
@@ -383,7 +445,7 @@ footer p{margin:0 0 12px;}
         </div>
       </div></li>
 
-      <li class="stop"><span class="time">18:00</span><div class="body">
+      <li class="stop"><span class="time">18:00<i class="act sight"><svg><use href="#ic-cathedral"/></svg></i></span><div class="body">
         <h3>Down to Ouchy on the m2</h3>
         <p>The steepest metro line in the world drops you at the waterfront. Walk the quai as the light goes off the Savoy Alps opposite.</p>
         <div class="maps">
@@ -433,7 +495,7 @@ footer p{margin:0 0 12px;}
         </div>
       </div></li>
 
-      <li class="stop"><span class="time">08:15</span><div class="body">
+      <li class="stop"><span class="time">08:15<i class="act transit"><svg><use href="#ic-train"/></svg></i></span><div class="body">
         <h3>Lausanne → Lutry</h3>
         <span class="leg">10 MIN</span>
         <div class="maps">
@@ -441,7 +503,7 @@ footer p{margin:0 0 12px;}
         </div>
       </div></li>
 
-      <li class="stop"><span class="time">08:30</span><div class="body">
+      <li class="stop"><span class="time">08:30<i class="act hike"><svg><use href="#ic-hike"/></svg></i></span><div class="body">
         <h3>Walk east through the terraces</h3>
         <p>Lutry → Grandvaux → Épesses → Rivaz → St-Saphorin. UNESCO-listed, worked since the twelfth century, with the lake and the Savoy Alps in front of you almost the whole way.</p>
         <span class="leg">11 KM · ~3 H</span>
@@ -452,7 +514,7 @@ footer p{margin:0 0 12px;}
         </div>
       </div></li>
 
-      <li class="stop"><span class="time">11:30</span><div class="body">
+      <li class="stop"><span class="time">11:30<i class="act sight"><svg><use href="#ic-cathedral"/></svg></i></span><div class="body">
         <h3>St-Saphorin</h3>
         <p>The prettiest village in Lavaux, and small enough that ten minutes covers it.</p>
         <div class="maps">
@@ -460,7 +522,7 @@ footer p{margin:0 0 12px;}
         </div>
       </div></li>
 
-      <li class="stop"><span class="time">12:00</span><div class="body">
+      <li class="stop"><span class="time">12:00<i class="act swim"><svg><use href="#ic-swim"/></svg></i></span><div class="body">
         <h3>Swim and long lunch</h3>
         <p>Drop down to the water at Rivaz, or take the train two stops to Cully or Vevey for more choice.</p>
         <div class="maps">
@@ -469,12 +531,12 @@ footer p{margin:0 0 12px;}
         </div>
       </div></li>
 
-      <li class="stop"><span class="time">14:30</span><div class="body">
+      <li class="stop"><span class="time">14:30<i class="act transit"><svg><use href="#ic-train"/></svg></i></span><div class="body">
         <h3>Back to Lausanne</h3>
         <span class="leg">20–30 MIN</span>
       </div></li>
 
-      <li class="stop"><span class="time">15:00</span><div class="body">
+      <li class="stop"><span class="time">15:00<i class="act museum"><svg><use href="#ic-temple"/></svg></i></span><div class="body">
         <h3>Plateforme 10</h3>
         <p>Three museums in one complex built directly against the station: MCBA for fine art, Photo Elysée for photography, mudac for design. You walk from the last room to your platform. If you'd rather one strong thing than three, the Collection de l'Art Brut across town is the more singular experience — outsider art, unlike any other museum in Europe.</p>
         <span class="leg">BOTH OPEN TO 18:00 · ART BRUT CLOSED MON</span>
@@ -484,7 +546,7 @@ footer p{margin:0 0 12px;}
         </div>
       </div></li>
 
-      <li class="stop"><span class="time">17:00</span><div class="body">
+      <li class="stop"><span class="time">17:00<i class="act transit"><svg><use href="#ic-train"/></svg></i></span><div class="body">
         <h3>Lausanne → Zürich</h3>
         <span class="leg">2 H 10 · DIRECT · ARRIVES 19:15</span>
         <a class="flag" href="#eclipse">Not on 12 August — read this first</a>
